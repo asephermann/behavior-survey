@@ -1,0 +1,7 @@
+{
+  "name": "behavior-survey",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
