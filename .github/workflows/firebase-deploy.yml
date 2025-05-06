@@ -22,7 +22,7 @@ jobs:
         run: npm install
 
       - name: Build Ionic App
-        run: ionic build --prod
+        run: npx ionic build --prod
 
       - name: Deploy to Firebase Hosting
         uses: FirebaseExtended/action-hosting-deploy@v0
