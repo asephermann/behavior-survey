@@ -21,8 +21,11 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Install Ionic CLI
+        run: npm install -g @ionic/cli
+
       - name: Build Ionic App
-        run: npm run build
+        run: npx ionic build --prod
 
       - name: Deploy to Firebase Hosting
         uses: FirebaseExtended/action-hosting-deploy@v0
