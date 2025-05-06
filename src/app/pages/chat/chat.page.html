@@ -1,0 +1,47 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="/"></ion-back-button>
+        </ion-buttons>
+        <ion-title>Kelas {{ kelasId }}</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+    <div class="instruction">
+        Tuliskan catatan perilaku siswa berdasarkan hasil pemantauan guru di kelas. Jawaban Anda akan disimpan untuk
+        masing-masing siswa.
+    </div>
+    <div class="chat-container">
+        <ng-container *ngFor="let siswa of siswaList().slice(0, currentIndex() + 1); let i = index">
+            <!-- Bubble Masuk -->
+            <div class="message received">
+                {{ siswa.nama }}
+            </div>
+
+            <!-- Bubble Keluar -->
+            <div class="message sent" *ngIf="siswa.jawaban" (click)="edit(i)">
+                {{ siswa.jawaban }}
+            </div>
+        </ng-container>
+    </div>
+</ion-content>
+
+<ion-footer>
+    <ion-toolbar>
+        <ng-container *ngIf="!isLastStudent() || isEditing; else thanksBlock">
+            <div class="input-box">
+                <ion-textarea [(ngModel)]="inputJawaban" placeholder="Tulis jawaban..." autoGrow="true"
+                    class="chat-textarea" (keydown)="onKeydown($event)"></ion-textarea>
+                <ion-button fill="clear" class="send-button" [disabled]="!inputJawaban.trim()" (click)="send()">
+                    <ion-icon name="send" slot="icon-only"></ion-icon>
+                </ion-button>
+            </div>
+        </ng-container>
+        <ng-template #thanksBlock>
+            <div class="thanks-message">
+                Terima kasih, semua siswa telah dijawab.
+            </div>
+        </ng-template>
+    </ion-toolbar>
+</ion-footer>

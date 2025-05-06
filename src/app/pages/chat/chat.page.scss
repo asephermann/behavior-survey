@@ -1,0 +1,115 @@
+ion-content {
+    --background: none;
+    background-color: #fefefe; // Hampir putih
+    background-image:
+        repeating-linear-gradient(45deg, rgba(0, 0, 0, 0.015) 0, rgba(0, 0, 0, 0.015) 1px, transparent 2px, transparent 5px),
+        repeating-linear-gradient(-45deg, rgba(0, 0, 0, 0.015) 0, rgba(0, 0, 0, 0.015) 1px, transparent 2px, transparent 5px);
+    background-size: 100% 100%;
+    padding-bottom: 80px;
+}
+
+
+.chat-container {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.message {
+    max-width: 80%;
+    padding: 10px 14px;
+    border-radius: 18px;
+    font-size: 14px;
+    line-height: 1.4;
+    word-break: break-word;
+    display: inline-block;
+}
+
+.message.received {
+    background-color: #f0f0f0;
+    align-self: flex-start;
+    border-top-left-radius: 0;
+}
+
+.message.sent {
+    background-color: #dcf8c6;
+    align-self: flex-end;
+    border-top-right-radius: 0;
+    cursor: pointer;
+}
+
+.input-area {
+    padding: 16px;
+    border-top: 1px solid #ccc;
+    background-color: #fff;
+    position: sticky;
+    bottom: 0;
+}
+
+.instruction {
+    padding: 16px;
+    font-size: 15px;
+    line-height: 1.5;
+    color: #666;
+    background-color: #f4f4f4;
+    border-bottom: 1px solid #ddd;
+}
+
+.thanks-footer {
+    --background: #f4f4f4;
+    border-top: 1px solid #ddd;
+}
+
+.thanks-message {
+    text-align: center;
+    font-size: 14px;
+    color: #444;
+    padding: 16px;
+}
+
+.input-area {
+    padding: 8px 12px;
+    background: #fff;
+    border-top: 1px solid #ddd;
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
+}
+
+.input-box {
+    display: flex;
+    align-items: center;
+    background: #f0f0f0;
+    border-radius: 24px;
+    padding: 8px 12px;
+    gap: 8px;
+    min-height: 48px;
+    width: 100%;
+  }
+
+.input-wrapper {
+    --background: transparent;
+    border-radius: 24px;
+    background: #f0f0f0;
+    padding-left: 8px;
+    display: flex;
+    align-items: center;
+}
+
+.chat-textarea {
+    flex: 1;
+    font-size: 14px;
+    background: transparent;
+    min-height: 38px;
+    max-height: 80px;
+    line-height: 1.4;
+  }
+
+.send-button {
+    font-size: 20px;
+    color: #0b93f6 !important;
+    height: 32px;
+    width: 32px;
+    padding: 0;
+  }
