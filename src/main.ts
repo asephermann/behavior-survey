@@ -3,6 +3,7 @@ import { RouteReuseStrategy, provideRouter, withPreloading, PreloadAllModules } 
 import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular/standalone';
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { provideFirestore, getFirestore } from '@angular/fire/firestore';
+import { defineCustomElements } from '@ionic/core/loader';
 
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
@@ -20,6 +21,8 @@ bootstrapApplication(AppComponent, {
     provideFirestore(() => getFirestore())
   ],
 });
+
+defineCustomElements(window);
 
 addIcons({
   'search-outline': searchOutline,
