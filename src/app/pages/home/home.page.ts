@@ -29,17 +29,12 @@ export class HomePage implements OnInit {
     this.kelasList.set(list);
   }
 
-  toggleSearch(forceClose = false) {
-    if (forceClose || this.isSearching()) {
-      this.searchQuery.set('');
-      this.isSearching.set(false);
-    } else {
-      this.isSearching.set(true);
-  
-      setTimeout(() => {
-        this.searchbar?.setFocus();
-      }, 300);
-    }
+  toggleSearch() {
+    this.isSearching.set(true);
+
+    setTimeout(() => {
+      this.searchbar?.setFocus();
+    }, 300);
   }
 
   onCancelSearch() {

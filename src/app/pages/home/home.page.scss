@@ -48,3 +48,27 @@
   text-transform: uppercase;
   box-sizing: border-box;
 }
+
+ion-searchbar {
+  --background: #f0f0f0;
+  --color: #000;
+  --placeholder-color: #999;
+  --icon-color: #999;
+  --box-shadow: none;
+  --border-radius: 8px;
+  --cancel-button-color: #0b93f6;
+
+  padding-inline: 8px;
+  height: 40px;
+  font-size: 14px;
+
+  &::part(container) {
+    border: none;
+    box-shadow: none;
+    background: #f0f0f0;
+  }
+
+  input {
+    padding-left: 36px !important; // agar icon tidak mepet teks
+  }
+}
