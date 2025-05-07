@@ -1,11 +1,18 @@
-<ion-header>
-    <ion-toolbar>
-        <ion-buttons slot="start">
-            <ion-back-button defaultHref="/"></ion-back-button>
-        </ion-buttons>
-        <ion-title>Kelas {{ kelasId }}</ion-title>
-    </ion-toolbar>
-</ion-header>
+<ion-toolbar>
+    <ion-buttons slot="start">
+        <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+
+    <div class="header-info">
+        <div class="avatar-circle" [ngStyle]="{ 'background-color': avatarColor }">
+            {{ getInisial(kelasNama) }}
+        </div>
+        <div class="class-info">
+            <div class="class-name">{{ kelasNama }}</div>
+            <div class="teacher-name">{{ guruNama }}</div>
+        </div>
+    </div>
+</ion-toolbar>
 
 <ion-content [fullscreen]="true">
     <div class="instruction">
@@ -27,21 +34,23 @@
     </div>
 </ion-content>
 
-<ion-footer>
-    <ion-toolbar>
-        <ng-container *ngIf="!isLastStudent() || isEditing; else thanksBlock">
-            <div class="input-box">
-                <ion-textarea [(ngModel)]="inputJawaban" placeholder="Tulis jawaban..." autoGrow="true"
-                    class="chat-textarea" (keydown)="onKeydown($event)"></ion-textarea>
-                <ion-button fill="clear" class="send-button" [disabled]="!inputJawaban.trim()" (click)="send()">
-                    <ion-icon name="send" slot="icon-only"></ion-icon>
-                </ion-button>
-            </div>
-        </ng-container>
-        <ng-template #thanksBlock>
-            <div class="thanks-message">
-                Terima kasih, semua siswa telah dijawab.
-            </div>
-        </ng-template>
-    </ion-toolbar>
+<ion-footer class="chat-footer">
+    <ng-container *ngIf="!isLastStudent() || isEditing; else thanksBlock">
+        <div class="input-wrapper">
+            <ion-textarea [(ngModel)]="inputJawaban" class="chat-textarea" placeholder="Tulis jawaban..."
+                autoGrow="true" (keydown)="onKeydown($event)"
+                [ngStyle]="{ '--highlight-color': avatarColor || '#25D366' }"></ion-textarea>
+
+            <button *ngIf="inputJawaban?.trim()" class="circle-send-button"
+                [ngStyle]="{ 'background-color': avatarColor || '#25D366' }" (click)="send()">
+                <ion-icon name="send"></ion-icon>
+            </button>
+        </div>
+    </ng-container>
+
+    <ng-template #thanksBlock>
+        <div class="thanks-message">
+            Terima kasih, semua siswa telah dijawab.
+        </div>
+    </ng-template>
 </ion-footer>

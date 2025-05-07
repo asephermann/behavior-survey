@@ -1,22 +1,89 @@
 ion-content {
     --background: none;
-    background-color: #fefefe; // Hampir putih
+    background-color: #fefefe;
     background-image:
-        repeating-linear-gradient(45deg, rgba(0, 0, 0, 0.015) 0, rgba(0, 0, 0, 0.015) 1px, transparent 2px, transparent 5px),
-        repeating-linear-gradient(-45deg, rgba(0, 0, 0, 0.015) 0, rgba(0, 0, 0, 0.015) 1px, transparent 2px, transparent 5px);
+      repeating-linear-gradient(45deg, rgba(0, 0, 0, 0.015) 0, rgba(0, 0, 0, 0.015) 1px, transparent 2px, transparent 5px),
+      repeating-linear-gradient(-45deg, rgba(0, 0, 0, 0.015) 0, rgba(0, 0, 0, 0.015) 1px, transparent 2px, transparent 5px);
     background-size: 100% 100%;
-    padding-bottom: 80px;
-}
-
-
-.chat-container {
+    padding-bottom: 90px; // Supaya isi tidak tertutup footer
+  }
+  
+  ion-toolbar {
+    --min-height: 56px;
+    --background: #fff;
+    box-shadow: none;
+    display: flex;
+    align-items: center;
+  }
+  
+  ion-footer.chat-footer {
+    --background: transparent !important;
+    background: transparent !important;
+    box-shadow: none;
+    border-top: none;
+    z-index: 10;
+  }
+   
+  ion-textarea {
+    padding-top: 12px;
+    min-height: fit-content;
+  }
+  
+  .header-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .avatar-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #f44336;
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .class-info {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+  }
+  
+  .class-name {
+    font-weight: 600;
+    font-size: 16px;
+  }
+  
+  .teacher-name {
+    font-size: 13px;
+    color: #888;
+  }
+  
+  .instruction {
+    position: sticky;
+    top: var(--ion-safe-area-top, 56px);
+    z-index: 5;
+    padding: 16px;
+    font-size: 15px;
+    line-height: 1.5;
+    color: #666;
+    background-color: #f4f4f4;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .chat-container {
     padding: 16px;
     display: flex;
     flex-direction: column;
     gap: 8px;
-}
-
-.message {
+  }
+  
+  .message {
     max-width: 80%;
     padding: 10px 14px;
     border-radius: 18px;
@@ -24,92 +91,63 @@ ion-content {
     line-height: 1.4;
     word-break: break-word;
     display: inline-block;
-}
-
-.message.received {
+  }
+  
+  .message.received {
     background-color: #f0f0f0;
     align-self: flex-start;
     border-top-left-radius: 0;
-}
-
-.message.sent {
+  }
+  
+  .message.sent {
     background-color: #dcf8c6;
     align-self: flex-end;
     border-top-right-radius: 0;
     cursor: pointer;
-}
-
-.input-area {
-    padding: 16px;
-    border-top: 1px solid #ccc;
-    background-color: #fff;
-    position: sticky;
-    bottom: 0;
-}
-
-.instruction {
-    padding: 16px;
-    font-size: 15px;
-    line-height: 1.5;
-    color: #666;
-    background-color: #f4f4f4;
-    border-bottom: 1px solid #ddd;
-}
-
-.thanks-footer {
-    --background: #f4f4f4;
-    border-top: 1px solid #ddd;
-}
-
-.thanks-message {
+  }
+  
+  .input-wrapper {
+    display: flex;
+    align-items: flex-end;
+    padding: 8px 12px;
+    gap: 8px;
+    transition: all 0.3s ease;
+  }
+  
+  .chat-textarea {
+    flex: 1;
+    background: #f0f0f0;
+    border-radius: 24px;
+    font-size: 14px;
+    padding: 8px 12px;
+    --padding-start: 0;
+    --padding-end: 0;
+    --background: #f0f0f0;
+    --min-height: 40px;
+    --highlight-color: #ccc;
+    transition: flex 0.3s ease;
+  }
+  
+  .circle-send-button {
+    flex-shrink: 0;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: none;
+    background-color: #25D366;
+    color: white;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+  
+  .thanks-message {
     text-align: center;
     font-size: 14px;
     color: #444;
     padding: 16px;
-}
-
-.input-area {
-    padding: 8px 12px;
-    background: #fff;
-    border-top: 1px solid #ddd;
-    position: sticky;
-    bottom: 0;
-    z-index: 10;
-}
-
-.input-box {
-    display: flex;
-    align-items: center;
-    background: #f0f0f0;
-    border-radius: 24px;
-    padding: 8px 12px;
-    gap: 8px;
-    min-height: 48px;
-    width: 100%;
   }
-
-.input-wrapper {
-    --background: transparent;
-    border-radius: 24px;
-    background: #f0f0f0;
-    padding-left: 8px;
-    display: flex;
-    align-items: center;
-}
-
-.chat-textarea {
-    flex: 1;
-    font-size: 14px;
-    background: transparent;
-    min-height: 38px;
-    max-height: 80px;
-    line-height: 1.4;
-  }
-
-.send-button {
-    font-size: 20px;
-    color: #0b93f6 !important;
-    height: 32px;
-    width: 32px;
-    padding: 0;
-  }
+  

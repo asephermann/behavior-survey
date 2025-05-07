@@ -1,7 +1,7 @@
 import { Component, signal, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule, IonContent, Platform } from '@ionic/angular';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { FirestoreService } from 'src/app/core/services/firestore.service';
 
@@ -16,13 +16,28 @@ export class ChatPage {
     @ViewChild(IonContent) content!: IonContent;
 
     kelasId = this.route.snapshot.paramMap.get('id') ?? '';
+    kelasNama = '';
+    guruNama = '';
+    avatarColor = '#ccc';
+
     siswaList = signal<{ id: string; nama: string; jawaban: string | null }[]>([]);
     currentIndex = signal(0);
     inputJawaban: string = '';
     isEditing = false;
 
-    constructor(private route: ActivatedRoute, private firestore: FirestoreService,
-        private platform: Platform) {
+    constructor(
+        private route: ActivatedRoute,
+        private router: Router,
+        private firestore: FirestoreService,
+        private platform: Platform
+    ) {
+        const nav = this.router.getCurrentNavigation();
+        const state = nav?.extras?.state;
+
+        this.kelasNama = state?.['nama'] ?? this.kelasId;
+        this.guruNama = state?.['guru'] ?? '';
+        this.avatarColor = state?.['color'] ?? '#ccc';
+
         this.loadSiswa();
 
         this.platform.backButton.subscribeWithPriority(10, () => {
@@ -30,6 +45,10 @@ export class ChatPage {
                 this.cancelEdit();
             }
         });
+    }
+
+    getInisial(nama: string): string {
+        return nama.split(' ')[0] || '?';
     }
 
     cancelEdit() {
