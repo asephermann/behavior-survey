@@ -8,6 +8,9 @@ import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
 import { environment } from './environments/environment';
 
+import { addIcons } from 'ionicons';
+import { searchOutline, send } from 'ionicons/icons';
+
 bootstrapApplication(AppComponent, {
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
@@ -16,4 +19,9 @@ bootstrapApplication(AppComponent, {
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideFirestore(() => getFirestore())
   ],
+});
+
+addIcons({
+  'search-outline': searchOutline,
+  'send': send,
 });
