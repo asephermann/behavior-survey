@@ -14,6 +14,7 @@ import { FirestoreService } from 'src/app/core/services/firestore.service';
 })
 export class ChatPage {
     @ViewChild(IonContent) content!: IonContent;
+    isDesktop = false;
 
     kelasId = this.route.snapshot.paramMap.get('id') ?? '';
     kelasNama = '';
@@ -31,6 +32,7 @@ export class ChatPage {
         private firestore: FirestoreService,
         private platform: Platform
     ) {
+        this.isDesktop = platform.is('desktop');
         const nav = this.router.getCurrentNavigation();
         const state = nav?.extras?.state;
 
@@ -119,6 +121,8 @@ export class ChatPage {
     }
 
     onKeydown(event: KeyboardEvent) {
+        if (!this.isDesktop) return; // hanya aktif di desktop
+
         if (event.key === 'Enter' && !event.shiftKey) {
             event.preventDefault(); // Cegah baris baru
             if (this.inputJawaban.trim()) {
