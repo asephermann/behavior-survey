@@ -1,14 +1,8 @@
 <ion-toolbar>
   <ion-title *ngIf="!isSearching()">Daftar Kelas</ion-title>
 
-  <ion-searchbar
-    *ngIf="isSearching()"
-    #searchbar
-    [(ngModel)]="searchQuery"
-    placeholder="Cari kelas atau guru"
-    showCancelButton="always"
-    (ionCancel)="onCancelSearch()"
-  ></ion-searchbar>
+  <ion-searchbar *ngIf="isSearching()" #searchbar [(ngModel)]="searchQuery" placeholder="Cari kelas atau guru"
+    showCancelButton="always" (ionCancel)="onCancelSearch()"></ion-searchbar>
 
   <ion-buttons slot="end" *ngIf="!isSearching()">
     <ion-button (click)="toggleSearch()">
@@ -20,7 +14,11 @@
 
 <ion-content>
   <ion-list>
-    <ion-item *ngFor="let kelas of filteredKelas(); let i = index" [routerLink]="['/chat', kelas.id]">
+    <ion-item *ngFor="let kelas of filteredKelas(); let i = index" [routerLink]="['/chat', kelas.id]" [state]="{
+      nama: kelas.nama,
+      guru: kelas.guru,
+      color: getColor(i)
+    }">
       <ion-avatar slot="start" class="avatar-custom">
         <div class="avatar-circle" [ngStyle]="{ 'background-color': getColor(i) }">
           {{ getInisial(kelas.nama) }}
