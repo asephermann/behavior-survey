@@ -88,8 +88,10 @@ ion-content {
     padding: 10px 14px;
     border-radius: 18px;
     font-size: 14px;
-    line-height: 1.4;
+    line-height: 1.5;
     word-break: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap; /* penting untuk jaga spasi & baris */
     display: inline-block;
   }
   

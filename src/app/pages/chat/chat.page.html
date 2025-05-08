@@ -27,8 +27,7 @@
             </div>
 
             <!-- Bubble Keluar -->
-            <div class="message sent" *ngIf="siswa.jawaban" (click)="edit(i)">
-                {{ siswa.jawaban }}
+            <div class="message sent" *ngIf="siswa.jawaban" (click)="edit(i)" [innerHTML]="formatJawaban(siswa.jawaban)">
             </div>
         </ng-container>
     </div>

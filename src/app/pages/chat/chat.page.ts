@@ -138,4 +138,9 @@ export class ChatPage {
             history.back();
         }
     }
+
+    formatJawaban(text: string | null): string {
+        return (text || '').replace(/\n/g, '<br>');
+      }
+      
 }
