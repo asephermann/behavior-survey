@@ -1,31 +1,47 @@
-import { Component, OnInit, computed, signal, ViewChild } from '@angular/core';
+import { Component, OnInit, signal, computed, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonicModule, IonSearchbar } from '@ionic/angular';
-import { RouterModule } from '@angular/router';
+import { IonicModule, IonSearchbar, Platform } from '@ionic/angular';
+import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { FirestoreService } from 'src/app/core/services/firestore.service';
+import { ChatPage } from "../chat/chat.page";
 
 @Component({
   standalone: true,
   selector: 'app-home',
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
-  imports: [CommonModule, FormsModule, IonicModule, RouterModule]
+  imports: [CommonModule, FormsModule, IonicModule, RouterModule, ChatPage]
 })
 export class HomePage implements OnInit {
   @ViewChild('searchbar') searchbar!: IonSearchbar;
-  kelasList = signal<{ id: string; nama: string; guru: string }[]>([]);
+  isDesktop = false;
+
+  kelasList = signal<{ id: string; nama: string; guru: string; color: string }[]>([]);
   searchQuery = signal('');
   isSearching = signal(false);
+  selectedKelas: { id: string; nama: string; guru: string; color: string } | null = null;
 
-  constructor(private firestore: FirestoreService) { }
+  constructor(private firestore: FirestoreService, private platform: Platform, private router: Router) {
+    this.isDesktop = platform.width() >= 768;
+    platform.resize.subscribe(() => {
+      this.isDesktop = platform.width() >= 768;
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && this.selectedKelas) {
+        this.clearSelection();
+      }
+    });
+  }
 
   async ngOnInit() {
     const snapshot = await this.firestore.getKelasList();
-    const list = snapshot.docs.map(doc => ({
+    const list = snapshot.docs.map((doc, i) => ({
       id: doc.id,
+      color: this.getColor(i),
       ...doc.data()
-    })) as { id: string; nama: string, guru: string }[];
+    })) as { id: string; nama: string; guru: string; color: string }[];
     this.kelasList.set(list);
   }
 
@@ -36,7 +52,6 @@ export class HomePage implements OnInit {
       this.searchbar?.setFocus();
     }, 300);
   }
-
   onCancelSearch() {
     this.searchQuery.set('');
     this.isSearching.set(false);
@@ -51,7 +66,7 @@ export class HomePage implements OnInit {
   });
 
   getInisial(nama: string): string {
-    return nama.split(' ')[0]; // atau ambil 2 huruf depan: nama.slice(0, 2).toUpperCase()
+    return nama.slice(0, 2).toUpperCase();
   }
 
   getColor(index: number): string {
@@ -63,4 +78,21 @@ export class HomePage implements OnInit {
     return colors[index % colors.length];
   }
 
+  selectKelas(kelas: any) {
+    if (this.isDesktop) {
+      this.selectedKelas = kelas;
+    } else {
+      this.router.navigate(['/chat', kelas.id], {
+        state: {
+          nama: kelas.nama,
+          guru: kelas.guru,
+          color: kelas.color
+        }
+      });
+    }
+  }
+
+  clearSelection() {
+    this.selectedKelas = null;
+  }
 }

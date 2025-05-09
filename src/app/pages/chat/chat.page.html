@@ -1,5 +1,5 @@
 <ion-toolbar>
-    <ion-buttons slot="start">
+    <ion-buttons slot="start" *ngIf="!isDesktop">
         <ion-back-button defaultHref="/"></ion-back-button>
     </ion-buttons>
 
@@ -27,7 +27,8 @@
             </div>
 
             <!-- Bubble Keluar -->
-            <div class="message sent" *ngIf="siswa.jawaban" (click)="edit(i)" [innerHTML]="formatJawaban(siswa.jawaban)">
+            <div class="message sent" *ngIf="siswa.jawaban" (click)="edit(i)"
+                [innerHTML]="formatJawaban(siswa.jawaban)">
             </div>
         </ng-container>
     </div>
@@ -36,7 +37,7 @@
 <ion-footer class="chat-footer">
     <ng-container *ngIf="!isLastStudent() || isEditing; else thanksBlock">
         <div class="input-wrapper">
-            <ion-textarea [(ngModel)]="inputJawaban" class="chat-textarea" placeholder="Tulis jawaban..."
+            <ion-textarea #textareaInput [(ngModel)]="inputJawaban" class="chat-textarea" placeholder="Tulis jawaban..."
                 autoGrow="true" (keydown)="onKeydown($event)"
                 [ngStyle]="{ '--highlight-color': avatarColor || '#25D366' }"></ion-textarea>
 

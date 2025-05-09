@@ -1,8 +1,8 @@
-import { Component, signal, ViewChild } from '@angular/core';
+import { Component, Input, Output, EventEmitter, signal, ViewChild, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule, IonContent, Platform } from '@ionic/angular';
-import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FirestoreService } from 'src/app/core/services/firestore.service';
 
 @Component({
@@ -10,43 +10,79 @@ import { FirestoreService } from 'src/app/core/services/firestore.service';
     selector: 'app-chat',
     templateUrl: './chat.page.html',
     styleUrls: ['./chat.page.scss'],
-    imports: [CommonModule, IonicModule, FormsModule]
+    imports: [CommonModule, IonicModule, FormsModule],
+    host: {
+        '[style.display]': "'flex'",
+        '[style.flex]': "'1 1 0%'",
+        '[style.flexDirection]': "'column'",
+        '[style.height]': "'100%'"
+    }
 })
-export class ChatPage {
+export class ChatPage implements OnChanges {
     @ViewChild(IonContent) content!: IonContent;
-    isDesktop = false;
+    @ViewChild('textareaInput') textareaInput: any;
 
-    kelasId = this.route.snapshot.paramMap.get('id') ?? '';
-    kelasNama = '';
-    guruNama = '';
-    avatarColor = '#ccc';
+    @Input() kelasId?: string;
+    @Input() kelasNama: string = '';
+    @Input() guruNama: string = '';
+    @Input() avatarColor?: string;
+    @Output() closed = new EventEmitter<void>();
 
     siswaList = signal<{ id: string; nama: string; jawaban: string | null }[]>([]);
     currentIndex = signal(0);
     inputJawaban: string = '';
     isEditing = false;
+    isDesktop = false;
 
     constructor(
-        private route: ActivatedRoute,
-        private router: Router,
         private firestore: FirestoreService,
-        private platform: Platform
+        private platform: Platform,
+        private route: ActivatedRoute,
+        private router: Router
     ) {
         this.isDesktop = platform.is('desktop');
-        const nav = this.router.getCurrentNavigation();
-        const state = nav?.extras?.state;
 
-        this.kelasNama = state?.['nama'] ?? this.kelasId;
-        this.guruNama = state?.['guru'] ?? '';
-        this.avatarColor = state?.['color'] ?? '#ccc';
+        if (!this.kelasId) {
+            const idFromRoute = this.route.snapshot.paramMap.get('id');
+            if (idFromRoute) this.kelasId = idFromRoute;
 
-        this.loadSiswa();
+            const nav = this.router.getCurrentNavigation();
+            const state = nav?.extras?.state;
+            this.kelasNama = state?.['nama'] ?? this.kelasId;
+            this.guruNama = state?.['guru'] ?? '';
+            this.avatarColor = state?.['color'] ?? '#ccc';
+        }
 
         this.platform.backButton.subscribeWithPriority(10, () => {
             if (this.isEditing) {
                 this.cancelEdit();
+            } else if (this.isDesktop) {
+                this.closed.emit();
             }
         });
+    }
+
+    ngOnInit() {
+        if (this.kelasId) {
+            this.loadSiswa().then(() => {
+                setTimeout(() => {
+                    this.content?.scrollToBottom(300);
+                    this.textareaInput?.setFocus();
+                }, 150);
+            });
+        }
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes['kelasId'] && !changes['kelasId'].firstChange) {
+            this.loadSiswa().then(() => {
+                this.inputJawaban = '';
+                this.isEditing = false;
+
+                this.content?.scrollToBottom(300);
+                this.textareaInput?.setFocus();
+            });
+        }
     }
 
     getInisial(nama: string): string {
@@ -59,24 +95,19 @@ export class ChatPage {
     }
 
     async loadSiswa() {
-        const snapshot = await this.firestore.getSiswaByKelas(this.kelasId);
+        const snapshot = await this.firestore.getSiswaByKelas(this.kelasId!);
         const list = snapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data()
         })) as { id: string; nama: string; jawaban: string | null }[];
 
-        // Urutkan jika perlu
         list.sort((a, b) => a.nama.localeCompare(b.nama));
         this.siswaList.set(list);
 
-        // Cari index siswa pertama yang belum dijawab
         const firstUnansweredIndex = list.findIndex(siswa => !siswa.jawaban);
-
-        // Jika semua sudah dijawab, index jadi panjang list
         const indexToSet = firstUnansweredIndex !== -1 ? firstUnansweredIndex : list.length;
         this.currentIndex.set(indexToSet);
     }
-
 
     get currentSiswa() {
         return this.siswaList()[this.currentIndex()];
@@ -88,27 +119,17 @@ export class ChatPage {
 
     async send() {
         const siswa = this.currentSiswa;
-
-        await this.firestore.updateJawabanSiswa(this.kelasId, siswa.id, this.inputJawaban);
+        await this.firestore.updateJawabanSiswa(this.kelasId!, siswa.id, this.inputJawaban);
 
         const updated = [...this.siswaList()];
         updated[this.currentIndex()].jawaban = this.inputJawaban;
         this.siswaList.set(updated);
 
         this.inputJawaban = '';
-
-        // Cari siswa pertama yang belum dijawab
         const nextIndex = updated.findIndex(s => !s.jawaban);
-
-        if (nextIndex === -1) {
-            // Semua sudah dijawab
-            this.currentIndex.set(updated.length);
-        } else {
-            this.currentIndex.set(nextIndex);
-        }
+        this.currentIndex.set(nextIndex !== -1 ? nextIndex : updated.length);
 
         this.isEditing = false;
-
         setTimeout(() => {
             this.content?.scrollToBottom(300);
         }, 100);
@@ -121,26 +142,16 @@ export class ChatPage {
     }
 
     onKeydown(event: KeyboardEvent) {
-        if (!this.isDesktop) return; // hanya aktif di desktop
-
+        if (!this.isDesktop) return;
         if (event.key === 'Enter' && !event.shiftKey) {
-            event.preventDefault(); // Cegah baris baru
+            event.preventDefault();
             if (this.inputJawaban.trim()) {
                 this.send();
             }
         }
     }
 
-    handleBack() {
-        if (this.isEditing) {
-            this.cancelEdit();
-        } else {
-            history.back();
-        }
-    }
-
     formatJawaban(text: string | null): string {
         return (text || '').replace(/\n/g, '<br>');
-      }
-      
+    }
 }

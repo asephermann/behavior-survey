@@ -1,5 +1,5 @@
-<ion-toolbar>
-  <ion-title *ngIf="!isSearching()">Daftar Kelas</ion-title>
+<ion-toolbar *ngIf="!isDesktop">
+  <ion-title *ngIf="!isSearching()">Behavior Survey</ion-title>
 
   <ion-searchbar *ngIf="isSearching()" #searchbar [(ngModel)]="searchQuery" placeholder="Cari kelas atau guru"
     showCancelButton="always" (ionCancel)="onCancelSearch()"></ion-searchbar>
@@ -11,23 +11,48 @@
   </ion-buttons>
 </ion-toolbar>
 
+<ion-header [ngClass]="{ 'desktop': isDesktop }" *ngIf="isDesktop">
+  <ion-toolbar>
+    <ion-title>Behavior Survey</ion-title>
+  </ion-toolbar>
+</ion-header>
 
-<ion-content>
-  <ion-list>
-    <ion-item *ngFor="let kelas of filteredKelas(); let i = index" [routerLink]="['/chat', kelas.id]" [state]="{
-      nama: kelas.nama,
-      guru: kelas.guru,
-      color: getColor(i)
-    }">
-      <ion-avatar slot="start" class="avatar-custom">
-        <div class="avatar-circle" [ngStyle]="{ 'background-color': getColor(i) }">
-          {{ getInisial(kelas.nama) }}
-        </div>
-      </ion-avatar>
-      <ion-label>
-        <h2>{{ kelas.nama }}</h2>
-        <p>{{ kelas.guru }}</p>
-      </ion-label>
-    </ion-item>
-  </ion-list>
+<ion-content [fullscreen]="true">
+  <div [ngClass]="{ 'board-container': isDesktop }">
+    <div class="split-container" [ngClass]="{ 'desktop': isDesktop }">
+
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <ion-searchbar *ngIf="isDesktop" [(ngModel)]="searchQuery" placeholder="Cari kelas/guru"
+          showCancelButton="never" class="custom-searchbar"></ion-searchbar>
+
+        <ion-list>
+          <ion-item *ngFor="let kelas of filteredKelas(); let i = index" (click)="selectKelas(kelas)"
+            [class.active]="selectedKelas?.id === kelas.id">
+            <ion-avatar slot="start">
+              <div class="avatar-circle" [ngStyle]="{ 'background-color': getColor(i) }">
+                {{ getInisial(kelas.nama) }}
+              </div>
+            </ion-avatar>
+            <ion-label>
+              <h2>{{ kelas.nama }}</h2>
+              <p>{{ kelas.guru }}</p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </div>
+
+      <!-- Konten Chat atau Kosong -->
+      <div class="chat-pane" *ngIf="isDesktop">
+        <ng-container *ngIf="selectedKelas; else emptyChat">
+          <app-chat [kelasId]="selectedKelas.id" [kelasNama]="selectedKelas.nama" [guruNama]="selectedKelas.guru"
+            [avatarColor]="selectedKelas.color" (closed)="clearSelection()"></app-chat>
+        </ng-container>
+        <ng-template #emptyChat>
+          <div class="placeholder">Pilih kelas untuk mulai</div>
+        </ng-template>
+      </div>
+
+    </div>
+  </div>
 </ion-content>
