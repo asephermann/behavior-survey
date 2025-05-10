@@ -1,4 +1,4 @@
-<ion-toolbar>
+<ion-toolbar slot="fixed">
     <ion-buttons slot="start" *ngIf="!isDesktop">
         <ion-back-button defaultHref="/"></ion-back-button>
     </ion-buttons>
@@ -34,7 +34,7 @@
     </div>
 </ion-content>
 
-<ion-footer class="chat-footer">
+<ion-footer class="chat-footer" slot="fixed">
     <ng-container *ngIf="!isLastStudent() || isEditing; else thanksBlock">
         <div class="input-wrapper">
             <ion-textarea #textareaInput [(ngModel)]="inputJawaban" class="chat-textarea" placeholder="Tulis jawaban..."
