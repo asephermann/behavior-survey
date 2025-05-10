@@ -1,8 +1,22 @@
-<ion-toolbar slot="fixed">
-    <ion-buttons slot="start" *ngIf="!isDesktop">
-        <ion-back-button defaultHref="/"></ion-back-button>
-    </ion-buttons>
+<ion-header *ngIf="!isDesktop">
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="/"></ion-back-button>
+        </ion-buttons>
 
+        <div class="header-info">
+            <div class="avatar-circle" [ngStyle]="{ 'background-color': avatarColor }">
+                {{ getInisial(kelasNama) }}
+            </div>
+            <div class="class-info">
+                <div class="class-name">{{ kelasNama }}</div>
+                <div class="teacher-name">{{ guruNama }}</div>
+            </div>
+        </div>
+    </ion-toolbar>
+</ion-header>
+
+<ion-toolbar *ngIf="isDesktop">
     <div class="header-info">
         <div class="avatar-circle" [ngStyle]="{ 'background-color': avatarColor }">
             {{ getInisial(kelasNama) }}
