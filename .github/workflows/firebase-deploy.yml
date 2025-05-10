@@ -3,8 +3,7 @@ name: Deploy Ionic App to Firebase Hosting
 on:
   push:
     branches:
-      # - master
-      - v1
+      - master
 
 jobs:
   build-and-deploy:
